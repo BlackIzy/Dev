@@ -1,0 +1,205 @@
+-- Creation des bases : 
+CREATE TABLE t_utilisateur_uti 
+(
+	uti_nom VARCHAR(60) NOT NULL,
+	uti_prenom VARCHAR(60) NOT NULL,
+	uti_mail VARCHAR(80) NOT NULL,
+	uti_valide CHAR(1) NOT NULL,
+	uti_statut CHAR(1) NOT NULL,
+	uti_date_de_creation DATE NOT NULL,
+	cpt_pseudo VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE t_compte_cpt
+(
+	cpt_pseudo VARCHAR(20) NOT NULL,
+	cpt_mot_de_passe CHAR(32) NOT NULL
+);
+
+CREATE TABLE t_presentation_pre
+(
+	pre_numero INTEGER NOT NULL,
+	pre_nom_de_la_structure VARCHAR(60) NOT NULL,
+	pre_adresse VARCHAR(100) NOT NULL,
+	pre_mail VARCHAR(20) NOT NULL,
+	pre_tel VARCHAR(12) NOT NULL,
+	pre_horaire VARCHAR(60) NOT NULL,
+	pre_texte_de_bienvenue VARCHAR(300) NOT NULL,
+	cpt_pseudo VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE t_news_new
+(
+	new_numero INTEGER NOT NULL,
+	new_titre VARCHAR(50) NOT NULL,
+	new_texte VARCHAR(300) NOT NULL,
+	new_date_de_publication DATE NOT NULL,
+	new_etat CHAR(20) NOT NULL,
+	cpt_pseudo VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE t_selection_sel
+(
+	sel_numero INTEGER NOT NULL,
+	sel_titre VARCHAR(60) NOT NULL,
+	sel_texte_introductive VARCHAR(200) NOT NULL,
+	sel_date_dajout DATE NOT NULL,
+	cpt_pseudo VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE t_element_elt
+(
+	elt_numero INTEGER NOT NULL,
+	elt_intitule VARCHAR(200) NOT NULL,
+	elt_descriptif VARCHAR(100) NOT NULL,
+	elt_date_dajout DATE NOT NULL,
+	elt_fichier_images VARCHAR(100) NOT NULL,
+	elt_etat CHAR(10) NOT NULL
+);
+
+CREATE TABLE tj_sel_elt
+(
+	sel_numero INTEGER NOT NULL,
+	elt_numero INTEGER NOT NULL
+);
+
+CREATE TABLE t_liens_lie
+(
+	lie_numero INTEGER NOT NULL,
+	lie_titre VARCHAR(100) NOT NULL,
+	lie_url VARCHAR(200) NOT NULL,
+	lie_auteur VARCHAR(100) NOT NULL,
+	lie_date_de_publication DATE NOT NULL,
+	elt_numero INTEGER NOT NULL
+);
+
+-- PS : pour la creation des clés et la modification en auto incrementation faut commencé par les clés primaire ensuite l'auto incrementation et les clés etrangères :)
+
+
+ALTER TABLE t_compte_cpt ADD CONSTRAINT t_compte_cpt PRIMARY KEY(cpt_pseudo);
+ALTER TABLE t_news_new ADD CONSTRAINT t_news_new PRIMARY KEY(new_numero);
+ALTER TABLE t_presentation_pre ADD CONSTRAINT t_presentation_pre PRIMARY KEY(pre_numero);
+ALTER TABLE t_selection_sel ADD CONSTRAINT t_selection_sel PRIMARY KEY(sel_numero);
+ALTER TABLE t_element_elt ADD CONSTRAINT t_element_elt PRIMARY KEY(elt_numero);
+ALTER TABLE t_liens_lie ADD CONSTRAINT t_liens_lie PRIMARY KEY(lie_numero);
+
+ALTER TABLE t_news_new MODIFY new_numero INTEGER NOT NULL AUTO_INCREMENT;
+ALTER TABLE t_presentation_pre MODIFY pre_numero INTEGER NOT NULL AUTO_INCREMENT;
+ALTER TABLE t_selection_sel MODIFY sel_numero INTEGER NOT NULL AUTO_INCREMENT;
+ALTER TABLE t_element_elt MODIFY elt_numero INTEGER NOT NULL AUTO_INCREMENT;
+ALTER TABLE t_liens_lie MODIFY lie_numero INTEGER NOT NULL AUTO_INCREMENT;
+
+
+
+ALTER TABLE t_utilisateur_uti ADD CONSTRAINT t_uti_t_cpt_FK FOREIGN KEY (cpt_pseudo) REFERENCES t_compte_cpt(cpt_pseudo);
+ALTER TABLE t_news_new ADD CONSTRAINT t_new_t_cpt_FK FOREIGN KEY (cpt_pseudo) REFERENCES t_compte_cpt(cpt_pseudo);
+ALTER TABLE t_presentation_pre ADD CONSTRAINT t_pre_t_cpt_FK FOREIGN KEY (cpt_pseudo) REFERENCES t_compte_cpt(cpt_pseudo);
+ALTER TABLE t_selection_sel ADD CONSTRAINT t_sel_t_cpt_FK FOREIGN KEY (cpt_pseudo) REFERENCES t_compte_cpt(cpt_pseudo);
+ALTER TABLE t_liens_lie ADD CONSTRAINT t_lie_t_elt_FK FOREIGN KEY (elt_numero) REFERENCES t_element_elt(elt_numero);
+
+
+ALTER TABLE tj_sel_elt ADD PRIMARY KEY(sel_numero, elt_numero);
+ALTER TABLE tj_sel_elt ADD CONSTRAINT tj_sel_t_elt_FK FOREIGN KEY(elt_numero) REFERENCES t_element_elt(elt_numero);
+ALTER TABLE tj_sel_elt ADD CONSTRAINT tj_sel_t_sel_FK FOREIGN KEY(sel_numero) REFERENCES t_selection_sel(sel_numero);
+
+
+-- Insertions des jeux de données : 
+-- Compte : 
+INSERT INTO t_compte_cpt VALUES
+('Valerie-Marc', MD5('AZERTY')),
+('gestionnaire1', MD5('gesWOSH_!21')),
+('Maki', MD5('AZERTY')),
+('Datsol', MD5('AZERTY')),
+('Jin',  MD5('AZERTY')),
+('Nita',  MD5('AZERTY')),
+('Raku',  MD5('AZERTY')),
+('Cok',  MD5('AZERTY')),
+('Rana', MD5('AZERTY')),
+('Keta', MD5('AZERTY')),
+('Chiwa', MD5('AZERTY'));
+
+
+-- Utilisateurs : 
+INSERT INTO t_utilisateur_uti VALUES
+('M', 'V', 'V-M@yahoo.fr', 'A', 'R','2021-01-25', 'Valerie-Marc' ),
+('Berte', 'Abdoulaye', 'buzz@gmail.com', 'A', 'A', '2021-01-25', 'gestionnaire1'),
+('Naruto', 'Uzamaki','uzamaki@gmail.com', 'A', 'A', '2021-01-25', 'Maki'),
+('Weei', 'Soldat', 'soldat@gmail.com', 'A', 'A', '2021-01-25', 'Datsol'),
+('Neji', 'Hyûga', 'neji@gmail.com', 'A', 'A', '2021-01-25', 'Jin'),
+('Hinata', 'Hyûga', 'nita@gmail.com', 'A', 'A', '2021-01-25', 'Nita'),
+('Sakura', 'Haruno', 'raku@gmail.com', 'A', 'A', '2021-01-25', 'Raku'),
+('Lee', 'Rock', 'lee@gmail.com', 'A', 'A', '2021-01-25', 'Cok'),
+('Shimaru', 'Nara', 'nara@gmail.com', 'D', 'A', '2021-01-25', 'Rana'),
+('Kakashi', 'Hatake', 'take@gmail.com', 'D', 'A', '2021-01-25', 'Keta'),
+('Sasuke', 'Uchiwa', 'suke@gmail.com', 'D', 'A', '2021-01-25', 'Chiwa');
+
+-- Presentation :
+INSERT INTO t_presentation_pre VALUES
+(1,'IZY', '12  rue marques izy', 'izy@mail.com', '0204620246', '24/24', 'Bienvenue sur notre site internet Izy la marque de la fabrique', 'gestionnaire1');
+
+-- News :
+INSERT INTO t_news_new VALUES
+(NULL,'Solde', 'Les soldes hivernal sont en cours allez vite regardez',curdate(), 'En ligne', 'gestionnaire1'),
+(NULL,'Reduction', 'Les reductions sont enormes cette année de 10-60%. Les manqués pas !',curdate(), 'En ligne', 'gestionnaire1'),
+(NULL,'Rubrique', 'Creation d une nouvelle selection promo regroupant toute les promos sur le site',curdate(), 'En ligne', 'gestionnaire1'),
+(NULL, 'Rubrique reseaux', 'Vous pouvez nous suivre et nous envoye vos look pour qu elle soit publie tu te verra peut être sur le site IZY ;)', curdate(), 'En ligne', 'gestionnaire1'),
+(NULL, 'Livraison', 'Vous serez livré dans les plus bref delais, en raison de la pandemi, notre services client reste à votre disposition', curdate(), 'En ligne', 'gestionnaire1');
+
+-- Selection : 
+INSERT INTO t_selection_sel VALUES 
+(NULL,'VETEMENTS', 'Ensemble des vêtements disponible sur le site : Blousons, T-shirts, Chemises, Pantalon & Jean', curdate(), 'gestionnaire1'),
+(NULL,'CHAUSSURES', 'Ensemble des chaussures disponible sur le site : Bottes, Baskets, Tongs, Sandales', curdate(), 'gestionnaire1'),
+(NULL,'ACCESOIRES', 'Ensemble des accessoires disponible sur le site : Montres, Sacs & Sacoches, Ceintures, Bracelets, Gants', curdate(), 'gestionnaire1'),
+(NULL,'PROMOS', 'Ensemble des promos disponible sur le site', curdate(), 'gestionnaire1');
+
+-- Elements : 
+INSERT INTO t_element_elt VALUES
+(NULL,'T-SHIRTS', 'Le t-shirt est un vêtement emblématique et nécessaire par sa simplicité.', curdate(), '.\images\t-shirt.jpeg' , 'Publié'),
+(NULL,'CHEMISES', 'La chemise s adapte très bien à de nombreux styles.', curdate(), '.\images\chemise.jpg', 'Publié'),
+(NULL,'PANTALON & JEAN', 'Le pantalon se décline en de nombreuses coupes.',curdate(),'.\images\t-shirt.jpeg', 'Publié'),
+(NULL,'BLOUSONS', 'EN peridode hivernal faut toujours un blouson :)', curdate(), '.\images\blouson.jpg', 'Publié'),
+(NULL,'BOTTES', 'Les bottes sont tendance mais aussi necessaire :)', curdate(), '.\images\bottes.jpg', 'Publié'),
+(NULL,'BASKETES', 'Les baskets sont idéales pour créer un look dynamique.', curdate(), '.\images\basket.jpg', 'Publié'),
+(NULL,'TONGS', 'Idéal pour les vacances ou pour se promener lors des fortes chaleurs.', curdate(),'.\images\tong.jpg', 'Publié'),
+(NULL,'SANDALES', 'La sandale homme trouve un nouveau public et réinvestit la mode.',  curdate(),'.\images\sandales.jpg', 'Publié'),
+(NULL,'MONTRES', 'Au-delà de donner l heure, la montre est un véritable accessoire de mode.', curdate(), '.\images\montre.jpg', 'Brouillon'),
+(NULL,'SACS & SACOCHES', 'Sacs Sacoches vous trouverez tout se qui vous convient', curdate(), '.\images\sac.jpg', 'Publié'),
+(NULL,'CEINTURES', 'La ceinture est un accessoire indispensable.', curdate(), '.\images\ceinture.jpg', 'Publié'),
+(NULL,'GANTS', 'En hiver le gant est l accessoire indispensable.',curdate(), '.\images\gant.jpg', 'Publié'),
+(NULL,'BRACELETS', 'Le bracelet est un accessoire indémodable qui se décline à l infini.', curdate(), '.\images\bracelet.jpg', 'Publié'),
+(NULL,'FACEBOOK', 'Toute les news nous consernant en dehors du site sur une page facebook', curdate(), '.\images\logo-facebook.jpg', 'Publié'),
+(NULL,'INSTAGRAM', 'Toute les news nous consernant en dehors du site sur une page INSTAGRAM', curdate(), '.\images\logo-instagram.jpeg', 'Publié'),
+(NULL,'TWITER', 'Toute les news nous consernant en dehors du site sur une page INSTAGRAM',curdate(), '.\images\logo-twitter.jpeg', 'Publié');
+
+
+-- Jointures entre selection et elements :
+INSERT INTO tj_sel_elt VALUES 
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(2, 5),
+(2, 6),
+(2, 7),
+(2, 8),
+(3, 9),
+(3, 10),
+(3, 11),
+(3, 12), 
+(3, 13),
+(4, 1),
+(4, 3),
+(4, 13);
+
+-- Liens
+INSERT INTO t_liens_lie VALUES
+(NULL,'Page facebook', 'https://fr-fr.facebook.com/', 'gestionnaire1', curdate(), 14),
+(NULL,'Page instagram', 'https://twitter.com/?lang=fr', 'gestionnaire1', curdate(), 15),
+(NULL,'Page twiter', 'https://www.instagram.com/?hl=fr', 'gestionnaire1', curdate(), 16);
+
+
+
+
+
+
+

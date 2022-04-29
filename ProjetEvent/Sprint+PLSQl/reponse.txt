@@ -1,0 +1,99 @@
+Eercice 1 :
+
+Question 1 : Base de données => exercice1_famille.ecl
+
+1. Qui est le père d'ines.
+pere(X, ines).
+mario
+
+2. Qui est la mere de Theo ?
+mere(X, theo).
+julie
+
+3. Est-ce que Anne est mere ?
+est_mere(anne).
+Yes.
+
+4. Est-ce que Theo est pere ?
+est_pere(theo).
+No.
+
+5. Qui sont tous les enfants de Marcel ?
+Sol 2.
+
+6. Qui sont tous les parents ?
+parent(X, Y).
+Sol 10.
+
+7. Est-ce que Mario et Anne forment un couple ?
+No.
+
+8. Qui est en couple avec Mario ?
+Julie.
+
+9. Qui est en couple avec Marthe ?
+marcel.
+
+9. Qui est en couple avec Anne ?
+personne.
+
+Question 2 : Les faits lister en bas sont mise dans la base de données
+
+1. pere(luc, emma).
+
+2. mere(julie, enzo).
+
+3. pere(marc, enzo).
+
+Ces changements dans la base vont modifier les reponses des question 6 et 9 
+6. Sol 11
+7. luc 
+
+
+Question 3 : Les règles lister ci-dessous seront ajouter dans la base de données
+enfant(X, Y) :- parent(Y, X).
+frere(X, Y) :- parent(Z, X), parent(Z, Y), homme(X), X/=Y.
+soeur(X, Y) :- parent(Z, X), parent(Z, Y), femme(X) X/=Y.
+oncle(X, Y) :- frere(X, Z), parent(Z, Y).
+tante(X, Y) :- soeur(X, Z), parent(Z, Y).
+grand_parent(X, Y) :- parent(Z, Y), parent(X, Z).
+grand_pere(X, Y) :- parent(Z, Y), parent(X, Z), homme(X).
+grand_mere(X, Y) :- parent(Z, Y), parent(X, Z), femme(X).
+cousin(X, Y) :- enfant(X, Z), oncle(Z, Y), X\=Y.
+cousine(X, Y) :- enfant(X, Z), tante(Z, Y), X\=Y.
+fils(X, Y) :- parent(Y, X), homme(X).
+fille(X, Y) :- parent(Y, X), femme(X).
+PS : cousin, cousine redondance.
+
+
+Exercice 2 : Base de données => menu_restaurant.ecl
+
+Question 1 : Ecrire les regles correspondant aux denitions suivantes : base
+
+1. Un plat de resistance est un plat a base de viande ou de poisson.
+
+plat_resistance(X) :- viande(X).
+plat_resistance(X) :- poisson(X).
+
+2. Un repas se compose d'une entree, d'un plat et d'un dessert.
+repas(X, Y, Z) :- entre(X), plat_resistance(Y), dessert(Z).
+
+3. Plat dont le nombre de calories est compris entre 200 et 400.
+
+plat_resistance(X, Y) :- plat_resistance(X), calories(X, Y),  Y >= 200, Y =< 400.
+
+4. Plat plus calorique que le "Bar aux algues".
+
+plat_resistance_plus(X, Y) :- plat_resistance(X), calories(X, Y), Y > 292.
+
+5. Valeur calorique d'un repas.
+
+repas_calories(X, Y, Z, R) :- repas(X, Y, Z), calories(X, A), calories(Y, B), calories(Z, C), R is A+B+C.
+
+6. Un repas equilibre est un repas dont le nombre total de calories est inferieur a 800.
+
+repas_equilibre(X, Y, Z, R) :- repas_calories(X, Y, Z, R), write(R), R > 800.
+
+
+
+

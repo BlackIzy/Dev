@@ -1,0 +1,1 @@
+<?php echo "<h1>"; echo "Bravo compte invité crée"; echo "</h1>";
